@@ -1,6 +1,8 @@
 # Contract-Pixiv-Plugin
 点图姬插件 for 契约机器人
 
+>**cn.imjad.app.pixiv.txt**及**常量数据表目录下的TXT文件**是导出的文本形式代码
+
 ![](https://ww1.sinaimg.cn/large/0060lm7Tgy1feazpjej61j30u01hch91.jpg)
 ![](https://ww4.sinaimg.cn/large/0060lm7Tgy1feazrnbe38j30u01hcgva.jpg)
 

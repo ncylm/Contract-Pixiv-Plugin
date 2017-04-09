@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<msg brief="[Pixiv] {image_title}" flag="6" serviceID="0" templateID="1" action="web" url="http://www.pixiv.net/member_illust.php?mode=medium&amp;illust_id={image_id}">
+	<item>
+		<title color="#000000" size="36" style="0">{image_title}</title>
+	</item>
+	<item>
+		<summary size="28">{image_member}</summary>
+	</item>
+	<item layout="5">
+		<picture cover="{image_url}"></picture>
+	</item>
+	<item>
+		<summary color="#808080" size="24"> ID:{image_id}  {image_member} @ {image_date}</summary>
+	</item>
+	<item>
+		<hr />
+	</item>
+	<item>
+		<more>查看详情</more>
+	</item>
+</msg>

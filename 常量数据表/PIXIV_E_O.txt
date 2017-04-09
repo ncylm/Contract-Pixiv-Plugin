@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<msg brief="[Pixiv]{TITLE}" flag="6" serviceID="0" templateID="1">
+	<item bg="2" layout="6">
+		<title>{TITLE}</title>
+	</item>
+	<item>
+		<summary>{DESC}</summary>
+	</item>
+</msg>
