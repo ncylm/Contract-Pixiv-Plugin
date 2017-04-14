@@ -199,6 +199,8 @@ AuthRet ＝ 功能.其他_置AuthCode (AuthCode)
 ' 本子程序会在【线程】中被调用，请注意使用对象等需要初始化(CoInitialize,CoUninitialize)。
 ' 这里处理消息
 .如果真 (是否含有允许的指令 (msg))
+    全_fromGroup ＝ fromID
+    全_fromQQ ＝ fromQQ
     发送内容 ＝ 获取待发送内容 (msg, 真)
     ' 如果 (是否为XML (发送内容))
     .判断开始 (subType ＝ “2”)  ' 来自群临时消息
@@ -238,6 +240,8 @@ AuthRet ＝ 功能.其他_置AuthCode (AuthCode)
 .局部变量 发送内容, 文本型
 
 .如果真 (是否含有允许的指令 (msg))
+    全_fromGroup ＝ fromGroup
+    全_fromQQ ＝ fromQQ
     发送内容 ＝ 获取待发送内容 (msg, 假)
     .如果 (是否为XML (发送内容))
         功能.sendObjectMsg (2, 到长整数 (fromGroup), 到长整数 (fromQQ), 发送内容)
@@ -261,6 +265,8 @@ AuthRet ＝ 功能.其他_置AuthCode (AuthCode)
 ' 本子程序会在【线程】中被调用，请注意使用对象等需要初始化(CoInitialize,CoUninitialize)。
 ' 这里处理消息
 .如果真 (是否含有允许的指令 (msg))
+    全_fromGroup ＝ fromDiscuss
+    全_fromQQ ＝ fromQQ
     发送内容 ＝ 获取待发送内容 (msg, 假)
     .如果 (是否为XML (发送内容))
         功能.sendObjectMsg (4, 到长整数 (fromDiscuss), 到长整数 (fromQQ), 发送内容)
@@ -280,7 +286,7 @@ AuthRet ＝ 功能.其他_置AuthCode (AuthCode)
 .局部变量 data, 文本型
 
 url ＝ “https://api.imjad.cn/pixiv/v1/?type=illust&json_encode=JSON_UNESCAPED_UNICODE&id=” ＋ id
-data ＝ 功能.LQ转码Utf8ToAnsi (网页_访问 (url))
+data ＝ 功能.LQ转码Utf8ToAnsi (网页_访问 (url, 0, , , , “User-Agent: cn.imjad.app.pixiv/” ＋ 全_版本信息.文件版本 ＋ “ ” ＋ 全_fromGroup ＋ “/” ＋ 全_fromQQ, , , , ))
 
 json.解析 (data)
 加入成员 (作品相关数组, 到文本 (json.取通用属性 (“response[0].id”)))
@@ -299,7 +305,7 @@ json.解析 (data)
 .局部变量 data, 文本型
 
 url ＝ “https://api.imjad.cn/pixiv/v1/?type=latest&json_encode=JSON_UNESCAPED_UNICODE&per_page=1”
-data ＝ 功能.LQ转码Utf8ToAnsi (网页_访问 (url))
+data ＝ 功能.LQ转码Utf8ToAnsi (网页_访问 (url, 0, , , , “User-Agent: cn.imjad.app.pixiv/” ＋ 全_版本信息.文件版本 ＋ “ ” ＋ 全_fromGroup ＋ “/” ＋ 全_fromQQ, , , , ))
 
 json.解析 (data)
 加入成员 (作品相关数组, 到文本 (json.取通用属性 (“response[0].id”)))
@@ -340,7 +346,7 @@ now ＝ 取现行时间 ()
 日 ＝ 取文本右边 (“00” ＋ 到文本 (取日 (Unix时间戳记反转 (Unix时间戳记正转 (now) － 172800))), 2)
 date ＝ 到文本 (年 ＋ “-” ＋ 月 ＋ “-” ＋ 日)
 url ＝ “https://api.imjad.cn/pixiv/v1/?type=rank&json_encode=JSON_UNESCAPED_UNICODE&mode=” ＋ mode ＋ “&per_page=” ＋ 到文本 (per_page) ＋ “&date=” ＋ date
-data ＝ 功能.LQ转码Utf8ToAnsi (网页_访问 (url))
+data ＝ 功能.LQ转码Utf8ToAnsi (网页_访问 (url, 0, , , , “User-Agent: cn.imjad.app.pixiv/” ＋ 全_版本信息.文件版本 ＋ “ ” ＋ 全_fromGroup ＋ “/” ＋ 全_fromQQ, , , , ))
 
 json.解析 (data)
 置随机数种子 ()
@@ -366,7 +372,7 @@ i ＝ 到文本 (取随机数 (1, per_page) － 1)
 
 ' 服务端已做相应处理
 url ＝ “https://api.imjad.cn/pixiv/v1/?type=search&page=1&json_encode=JSON_UNESCAPED_UNICODE&word=” ＋ 编码_URL编码 (到文本 (功能.LQ转码AnsiToUtf8 (keyword)))
-data ＝ 功能.LQ转码Utf8ToAnsi (网页_访问 (url))
+data ＝ 功能.LQ转码Utf8ToAnsi (网页_访问 (url, 0, , , , “User-Agent: cn.imjad.app.pixiv/” ＋ 全_版本信息.文件版本 ＋ “ ” ＋ 全_fromGroup ＋ “/” ＋ 全_fromQQ, , , , ))
 json.解析 (data)
 置随机数种子 ()
 i ＝ 到文本 (取随机数 (1, json.取属性 (“illusts”).成员数 ()) － 1)
@@ -526,8 +532,8 @@ PIXIV_E_XML ＝ #PIXIV_E_O
     PixivLatest (作品相关数组)
     发送内容 ＝ 获取作品XML (PIXIV_XML, 作品相关数组)
 .判断 (寻找文本 (msg, 全_指令_点图, , 真) ≠ -1)
-    被查找内容 ＝ 删首尾空 (文本_取右边 (msg, 全_指令_点图, ))
-    .如果 (被查找内容 ＝ 到文本 (到数值 (被查找内容)))
+    被查找内容 ＝ 文本区分_只取数字 (文本_取右边 (删首尾空 (msg), 全_指令_点图, ))
+    .如果 (被查找内容 ≠ “”)
         PixivGet (被查找内容, 作品相关数组)
         发送内容 ＝ 获取作品XML (PIXIV_XML, 作品相关数组)
         .如果真 (作品相关数组 [1] ＝ “”)
@@ -537,11 +543,11 @@ PIXIV_E_XML ＝ #PIXIV_E_O
 
     .否则
         发送内容 ＝ 子文本替换 (PIXIV_E_XML, “{TITLE}”, “400 Bad Request”, , , 真)
-        发送内容 ＝ 子文本替换 (发送内容, “{DESC}”, “点图姬无法理解你的请求！（PS：请检查ID是否为纯数字）发送「” ＋ 全_指令_点图姬 ＋ “」查看帮助信息”, , , 真)
+        发送内容 ＝ 子文本替换 (发送内容, “{DESC}”, “点图姬无法理解你的请求！（PS：请检查ID是否输入正确）发送「” ＋ 全_指令_点图姬 ＋ “」查看帮助信息”, , , 真)
     .如果结束
 
 .判断 (寻找文本 (msg, 全_指令_搜图, , 真) ≠ -1)
-    被查找内容 ＝ 删首尾空 (文本_取右边 (msg, 全_指令_搜图, ))
+    被查找内容 ＝ 删首尾空 (文本_取右边 (删首尾空 (msg), 全_指令_搜图, ))
     PixivSearch (被查找内容, 作品相关数组)
     发送内容 ＝ 获取作品XML (PIXIV_XML, 作品相关数组)
     .如果真 (作品相关数组 [1] ＝ “”)
@@ -550,7 +556,7 @@ PIXIV_E_XML ＝ #PIXIV_E_O
     .如果真结束
 
 .判断 (寻找文本 (msg, 全_指令_设置类型, , 真) ≠ -1)
-    被查找内容 ＝ 删首尾空 (文本_取右边 (msg, 全_指令_设置类型, ))
+    被查找内容 ＝ 删首尾空 (文本_取右边 (删首尾空 (msg), 全_指令_设置类型, ))
     .如果 (是否为允许的排行榜类型 (被查找内容))
         写配置文件 (“排行榜”, “类型”, 被查找内容)
         发送内容 ＝ “排行榜类型已设置为” ＋ 被查找内容
@@ -559,7 +565,7 @@ PIXIV_E_XML ＝ #PIXIV_E_O
     .如果结束
 
 .判断 (寻找文本 (msg, 全_指令_设置返回数量, , 真) ≠ -1)
-    被查找内容 ＝ 删首尾空 (文本_取右边 (msg, 全_指令_设置返回数量, ))
+    被查找内容 ＝ 删首尾空 (文本_取右边 (删首尾空 (msg), 全_指令_设置返回数量, ))
     .如果 (到整数 (被查找内容) ≤ 50 且 到整数 (被查找内容) ≥ 1)
         写配置文件 (“排行榜”, “返回数量”, 被查找内容)
         发送内容 ＝ “排行榜返回数量已设置为” ＋ 被查找内容
@@ -568,7 +574,7 @@ PIXIV_E_XML ＝ #PIXIV_E_O
     .如果结束
 
 .判断 (寻找文本 (msg, 全_指令_设置NSFW, , 真) ≠ -1)
-    被查找内容 ＝ 删首尾空 (文本_取右边 (msg, 全_指令_设置NSFW, ))
+    被查找内容 ＝ 删首尾空 (文本_取右边 (删首尾空 (msg), 全_指令_设置NSFW, ))
     .如果 (被查找内容 ＝ “禁止”)
         写配置文件 (“杂项”, “NSFW”, 被查找内容)
         发送内容 ＝ “NSFW已设置为” ＋ 被查找内容
@@ -677,6 +683,8 @@ PIXIV_E_XML ＝ #PIXIV_E_O
 .全局变量 全_排行榜_类型, 文本型
 .全局变量 全_排行榜_返回数量, 文本型
 .全局变量 全_杂项_NSFW, 文本型
+.全局变量 全_fromGroup, 文本型
+.全局变量 全_fromQQ, 文本型
 
 .版本 2
 
